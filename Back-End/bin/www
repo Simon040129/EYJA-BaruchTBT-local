@@ -16,7 +16,6 @@ debug('back-end:server');
 
 
 var port = normalizePort(process.env.PORT || '3000');
-set('port', port);
 
 /**
  * Create HTTP server.
