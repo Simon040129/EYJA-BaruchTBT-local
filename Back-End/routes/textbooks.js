@@ -27,28 +27,33 @@ router.get('/', async (req, res) => {
 /* GET single textbook by ID */
 router.get('/:id', async (req, res) => {
     try {
-        const { id } = req.params;
         const connection = await pool.getConnection();
-        const [rows] = await connection.execute('SELECT * FROM textbooks WHERE id = ?', [id]);
+        // Left join to find the user ID associated with the seller_contact (email)
+        const [rows] = await connection.execute(`
+            SELECT t.*, u.id as seller_id, u.name as seller_name 
+            FROM textbooks t
+            LEFT JOIN users u ON t.seller_contact = u.email
+            WHERE t.id = ?
+        `, [req.params.id]);
         connection.release();
 
-        if (rows.length === 0) {
-            return res.status(404).json({
+        if (rows.length > 0) {
+            res.json({
+                success: true,
+                data: rows[0]
+            });
+        } else {
+            res.status(404).json({
                 success: false,
                 message: 'Textbook not found'
             });
         }
-
-        res.json({
-            success: true,
-            data: rows[0]
-        });
     } catch (error) {
         console.error('Error fetching textbook:', error);
         res.status(500).json({
             success: false,
             message: 'Error fetching textbook',
-            error: error.message
+            error: error.toString()
         });
     }
 });
@@ -64,6 +69,8 @@ router.post('/', async (req, res) => {
                 message: 'Title, price, and seller contact are required'
             });
         }
+
+        console.log('Received textbook data:', req.body);
 
         const connection = await pool.getConnection();
         const [result] = await connection.execute(
@@ -81,11 +88,11 @@ router.post('/', async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Error creating textbook:', error);
+        console.error('Error creating textbook (Full):', error);
         res.status(500).json({
             success: false,
-            message: 'Error creating textbook',
-            error: error.message
+            message: `Error creating textbook: ${error.message || 'Unknown error'}`,
+            error: error.toString()
         });
     }
 });

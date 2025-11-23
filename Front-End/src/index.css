@@ -1,14 +1,128 @@
-
-
-
-
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --primary-color: #002C5F; /* Baruch Navy Blue */
+  --secondary-color: #6CACE4; /* Lighter Blue */
+  --accent-color: #FFC72C; /* Baruch Gold/Yellow */
+  --text-color: #333333;
+  --bg-body: #f8f9fa;
+  --bg-card: #ffffff;
+  --border-color: #dee2e6;
+  --font-main: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Dark Mode Variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #6CACE4; /* Lighter blue for dark mode visibility */
+    --secondary-color: #002C5F;
+    --accent-color: #FFC72C;
+    --text-color: #e0e0e0;
+    --bg-body: #121212;
+    --bg-card: #1e1e1e;
+    --border-color: #2d2d2d;
+  }
+}
+
+body {
+  font-family: var(--font-main);
+  color: var(--text-color);
+  background-color: var(--bg-body);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* Button Fixes & Styles */
+.btn-primary {
+  background-color: #002C5F; /* Always use Navy for primary buttons */
+  border-color: #002C5F;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: #001f44 !important;
+  border-color: #001f44 !important;
+}
+
+.btn-outline-light:hover, .btn-outline-light:focus, .btn-outline-light:active {
+  background-color: var(--accent-color) !important;
+  color: #002C5F !important;
+  border-color: var(--accent-color) !important;
+}
+
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.bg-primary {
+  background-color: #002C5F !important;
+}
+
+.navbar-custom {
+  background-color: #002C5F; /* Always Navy */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link {
+  color: white !important;
+}
+
+.navbar-custom .nav-link:hover {
+  color: var(--accent-color) !important;
+}
+
+/* Card Styles for Dark Mode */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Form Styles for Dark Mode */
+.form-control, .form-select {
+  background-color: var(--bg-card);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--bg-card);
+  color: var(--text-color);
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 0.25rem rgba(108, 172, 228, 0.25);
+}
+
+.hero-section {
+  background: linear-gradient(rgba(0, 44, 95, 0.8), rgba(0, 44, 95, 0.8)), url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 100px 0;
+  margin-bottom: 2rem;
+  border-radius: 0 0 20px 20px;
+}
+
+/* Utility for text in dark mode */
+.text-muted {
+  color: #6c757d !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .text-muted {
+    color: #adb5bd !important;
+  }
+  
+  .bg-light {
+    background-color: #2d2d2d !important;
+  }
 }

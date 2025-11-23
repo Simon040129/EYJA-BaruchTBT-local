@@ -26,20 +26,16 @@ router.get('/', async (req, res) => {
 
 /* POST create new post */
 router.post('/', async (req, res) => {
+    const { content, author_name, category } = req.body;
+    if (!content) {
+        return res.status(400).json({ success: false, message: 'Content is required' });
+    }
+
     try {
-        const { content, author_name } = req.body;
-
-        if (!content) {
-            return res.status(400).json({
-                success: false,
-                message: 'Content is required'
-            });
-        }
-
         const connection = await pool.getConnection();
         const [result] = await connection.execute(
-            'INSERT INTO posts (content, author_name) VALUES (?, ?)',
-            [content, author_name || 'Anonymous']
+            'INSERT INTO posts (content, author_name, category) VALUES (?, ?, ?)',
+            [content, author_name || 'Anonymous', category || 'General']
         );
         connection.release();
 
@@ -49,16 +45,13 @@ router.post('/', async (req, res) => {
             data: {
                 id: result.insertId,
                 content,
-                author_name: author_name || 'Anonymous'
+                author_name: author_name || 'Anonymous',
+                category: category || 'General'
             }
         });
     } catch (error) {
         console.error('Error creating post:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error creating post',
-            error: error.message
-        });
+        res.status(500).json({ success: false, message: 'Error creating post' });
     }
 });
 

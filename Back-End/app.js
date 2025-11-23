@@ -9,6 +9,7 @@ import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
 import textbooksRouter from './routes/textbooks.js';
 import postsRouter from './routes/posts.js';
+import messagesRouter from './routes/messages.js';
 import { initializeDatabase } from './database.js';
 
 // Initialize database
@@ -19,10 +20,6 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
-// view engine setup
-app.set('views', join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
 app.use(logger('dev'));
 app.use(json());
 app.use(urlencoded({ extended: false }));
@@ -30,9 +27,12 @@ app.use(cookieParser());
 app.use(expressStatic(join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Mount routers
+// Note: We mount users at /api/users to match frontend expectations
+app.use('/api/users', usersRouter);
 app.use('/api/textbooks', textbooksRouter);
 app.use('/api/posts', postsRouter);
+app.use('/api/messages', messagesRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

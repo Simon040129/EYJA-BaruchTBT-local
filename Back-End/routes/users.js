@@ -72,24 +72,37 @@ router.post('/', async (req, res, next) => {
   try {
     const { id, name, email, age, city } = req.body;
 
-    if (!id || !name || !email) {
+    if (!name || !email) {
       return res.status(400).json({
         success: false,
-        message: 'ID, name, and email are required fields'
+        message: 'Name and email are required fields'
       });
     }
 
     const connection = await pool.getConnection();
-    await connection.execute(
-      'INSERT INTO users (id, name, email, age, city) VALUES (?, ?, ?, ?, ?)',
-      [id, name, email, age, city]
-    );
+
+    let result;
+    if (id) {
+      [result] = await connection.execute(
+        'INSERT INTO users (id, name, email, age, city) VALUES (?, ?, ?, ?, ?)',
+        [id, name, email, age, city]
+      );
+    } else {
+      [result] = await connection.execute(
+        'INSERT INTO users (name, email, age, city) VALUES (?, ?, ?, ?)',
+        [name, email, age, city]
+      );
+    }
+
     connection.release();
 
     res.json({
       success: true,
       message: 'User created successfully',
-      data: { id, name, email, age, city }
+      data: {
+        id: id || result.insertId,
+        name, email, age, city
+      }
     });
   } catch (error) {
     console.error('Error creating user:', error);
@@ -127,6 +140,29 @@ router.delete('/clear', async (req, res, next) => {
       message: 'Error clearing users',
       error: error.message
     });
+  }
+});
+
+// Login route (Simple email check for MVP)
+router.post('/login', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email is required' });
+  }
+
+  try {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.execute('SELECT * FROM users WHERE email = ?', [email]);
+    connection.release();
+
+    if (rows.length > 0) {
+      res.json({ success: true, data: rows[0] });
+    } else {
+      res.status(404).json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).json({ success: false, message: 'Error logging in' });
   }
 });
 
