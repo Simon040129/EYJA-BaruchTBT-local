@@ -7,6 +7,12 @@ import logger from 'morgan';
 
 import indexRouter from './routes/index.js';
 import usersRouter from './routes/users.js';
+import textbooksRouter from './routes/textbooks.js';
+import postsRouter from './routes/posts.js';
+import { initializeDatabase } from './database.js';
+
+// Initialize database
+initializeDatabase();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,6 +31,8 @@ app.use(expressStatic(join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api/textbooks', textbooksRouter);
+app.use('/api/posts', postsRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

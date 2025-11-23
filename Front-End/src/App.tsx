@@ -1,46 +1,29 @@
-import { useState } from 'react'
-import './App.css'
-import Accordion from 'react-bootstrap/Accordion';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
+import AppNavbar from './components/Navbar';
+import HomePage from './pages/HomePage';
+import SellPage from './pages/SellPage';
+import CommunityPage from './pages/CommunityPage';
 
 function App() {
-
-  fetch("/api/test-get")
-    .then(response => response.json())
-    .then(data => console.log(data));
-
   return (
-    <>
-      <Accordion defaultActiveKey="0">
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>Accordion Item #1</Accordion.Header>
-        <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="1">
-        <Accordion.Header>Accordion Item #2</Accordion.Header>
-        <Accordion.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
-    </>
-  )
+    <Router>
+      <div className="min-vh-100 d-flex flex-column">
+        <AppNavbar />
+        <main className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/sell" element={<SellPage />} />
+            <Route path="/community" element={<CommunityPage />} />
+            <Route path="/textbook/:id" element={<div>Textbook Details (Coming Soon)</div>} />
+          </Routes>
+        </main>
+        <footer className="bg-light py-3 text-center mt-auto">
+          <p className="mb-0">&copy; 2024 Baruch Textbook Trading</p>
+        </footer>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;
